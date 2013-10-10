@@ -26,25 +26,21 @@ task import_wca_tsvs: :environment do
   CLASSES.each do |klass|
     imported = 0
 
-    csv = CSV.open(tsv_filename_for(klass), options)
-    csv.each_slice(5000) do |rows|
-      rows.delete_if do |row|
-        if row.key?(:subid) && row[:subid].to_i != 1
-          puts "Skipping #{klass.name} #{row.inspect}"
-          true
-        end
+    CSV.foreach(tsv_filename_for(klass), options) do |row|
+      if row.key?(:subid) && row[:subid].to_i != 1
+        puts "Skipping #{klass.name} #{row.inspect}"
+        next
       end
 
-      attributes = rows.map do |row|
-        row.to_hash.except(:id, :subid).tap do |h|
-          h.update(_id: row[:id]) if row.key?(:id)
-        end
+      klass.create!(row.to_hash.except(:id, :subid)) do |x|
+        x._id = row[:id] if row.key?(:id)
       end
-      klass.collection.insert(attributes)
 
-      imported += rows.size
-      puts "Imported #{imported} #{klass.name.pluralize}"
+      imported += 1
+      puts "Imported #{imported} #{klass.name.pluralize}" if imported % 5000 == 0
     end
+
+    puts "Imported #{imported} #{klass.name.pluralize}"
   end
 end
 
