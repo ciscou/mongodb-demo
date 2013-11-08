@@ -33,20 +33,28 @@ class SpanishPodium
 
   def self.print
     puts [
-      "nombre".ljust(60, " "),
+      "pos",
+      "nombre".ljust(35, " "),
       "   oro",
       " plata",
       "bronce",
       " total"
     ].join("|")
-    all.to_a.sort.each do |r|
-      puts [
-        r.person_name.ljust(60, " "),
-        r.gold.to_s.rjust(6, " "),
-        r.silver.to_s.rjust(6, " "),
-        r.bronze.to_s.rjust(6, " "),
-        r.total.to_s.rjust(6, " ")
-      ].join("|")
+    i = 1
+    all.to_a.sort.chunk do |r|
+      [ r.gold, r.silver, r.bronze ]
+    end.each do |_, rs|
+      rs.each do |r|
+        puts [
+          i.to_s.rjust(3, " "),
+          r.person_name.truncate(35).ljust(35, " "),
+          r.gold.to_s.rjust(6, " "),
+          r.silver.to_s.rjust(6, " "),
+          r.bronze.to_s.rjust(6, " "),
+          r.total.to_s.rjust(6, " ")
+        ].join("|")
+      end
+      i += rs.size
     end
     nil
   end
@@ -60,15 +68,15 @@ class SpanishPodium
   end
 
   def gold
-    value["gold"]
+    value["gold"].to_i
   end
 
   def silver
-    value["silver"]
+    value["silver"].to_i
   end
 
   def bronze
-    value["bronze"]
+    value["bronze"].to_i
   end
 
   def total
