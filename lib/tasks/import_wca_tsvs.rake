@@ -20,7 +20,7 @@ task import_wca_tsvs: :environment do
     headers: true,
     header_converters: ->(s) { s.underscore.to_sym },
     col_sep: "\t",
-    quote_char: "|"
+    quote_char: "§"
   }
 
   CLASSES.each do |klass|
