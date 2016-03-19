@@ -1,0 +1,16 @@
+<div class="content-padded">
+  <form>
+    <input name="wcaid" type="text" placeholder="WCA id" value="<%= @wcaid %>">
+    <button name="scope" value="world"     class="btn btn-<%= @scope == 'world'     ? 'positive' : 'primary' %> btn-block">World nemeses</button>
+    <button name="scope" value="continent" class="btn btn-<%= @scope == 'continent' ? 'positive' : 'primary' %> btn-block">Continent nemeses</button>
+    <button name="scope" value="country"   class="btn btn-<%= @scope == 'country'   ? 'positive' : 'primary' %> btn-block">Country nemeses</button>
+  </form>
+</div>
+
+<% if @nemeses.present? %>
+  <ul class="table-view">
+    <% @nemeses.each do |nemesis| %>
+      <li class="table-view-cell"><%= nemesis.name %> <%= link_to nemesis.id, "https://www.worldcubeassociation.org/results/p.php?i=#{nemesis.id}", class: 'btn btn-primary', target: '_blank' %></li>
+    <% end %>
+  </ul>
+<% end %>
