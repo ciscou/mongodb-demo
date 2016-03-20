@@ -4,7 +4,7 @@ class NemesesCalculator
   end
 
   def nemeses
-    nemesis_ids = category_nemeses(SingleRank) & category_nemeses(SingleRank)
+    nemesis_ids = category_nemeses(SingleRank) & category_nemeses(AverageRank)
     nemeses = Person.find(nemesis_ids)
 
     nemeses.select do |nemesis|
