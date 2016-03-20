@@ -1,16 +1,31 @@
 <div class="content-padded">
   <form>
     <input name="wcaid" type="text" placeholder="WCA id" value="<%= @wcaid %>">
-    <button name="scope" value="world"     class="btn btn-<%= @scope == 'world'     ? 'positive' : 'primary' %> btn-block">World nemeses</button>
-    <button name="scope" value="continent" class="btn btn-<%= @scope == 'continent' ? 'positive' : 'primary' %> btn-block">Continent nemeses</button>
-    <button name="scope" value="country"   class="btn btn-<%= @scope == 'country'   ? 'positive' : 'primary' %> btn-block">Country nemeses</button>
+
+    <button name="scope" value="world"     class="btn btn-<%= @scope == 'world'     ? 'positive' : 'primary' %> btn-block" data-disable-with="Wait...">World nemeses</button>
+    <button name="scope" value="continent" class="btn btn-<%= @scope == 'continent' ? 'positive' : 'primary' %> btn-block" data-disable-with="Wait...">Continent nemeses</button>
+    <button name="scope" value="country"   class="btn btn-<%= @scope == 'country'   ? 'positive' : 'primary' %> btn-block" data-disable-with="Wait...">Country nemeses</button>
   </form>
 </div>
 
-<% if @nemeses.present? %>
-  <ul class="table-view">
-    <% @nemeses.each do |nemesis| %>
-      <li class="table-view-cell"><%= nemesis.name %> <%= link_to nemesis.id, "https://www.worldcubeassociation.org/results/p.php?i=#{nemesis.id}", class: 'btn btn-primary', target: '_blank' %></li>
-    <% end %>
-  </ul>
+<% if @person %>
+  <% if @nemeses.empty? %>
+    <div class="content-padded">
+      <p>No <%= @scope %> nemeses found for <%= @person.name %> (<%= link_to @wcaid, "https://www.worldcubeassociation.org/results/p.php?i=#{@wcaid}", target: '_blank' %>)!</p>
+    </div>
+  <% else %>
+    <div class="content-padded">
+      <p><%= @nemeses.size %> <%= @scope %> nemeses found for <%= @person.name %> (<%= link_to @wcaid, "https://www.worldcubeassociation.org/results/p.php?i=#{@wcaid}", target: '_blank' %>)</p>
+    </div>
+
+    <ul class="table-view">
+      <% @nemeses.each do |nemesis| %>
+        <li class="table-view-cell"><%= nemesis.name %> <%= link_to nemesis.id, "https://www.worldcubeassociation.org/results/p.php?i=#{nemesis.id}", class: 'btn btn-primary', target: '_blank' %></li>
+      <% end %>
+    </ul>
+  <% end %>
+<% elsif @wcaid.present? %>
+  <div class="content-padded">
+    <p>Person with WCA id <%= link_to @wcaid, "https://www.worldcubeassociation.org/results/p.php?i=#{@wcaid}", target: '_blank' %> not found!</p>
+  </div>
 <% end %>

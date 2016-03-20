@@ -1,6 +1,6 @@
 class NemesesCalculator
-  def initialize(person_id, scope = :world)
-    @person, @scope = Person.find(person_id), scope
+  def initialize(person, scope = :world)
+    @person, @scope = person, scope
   end
 
   def nemeses
@@ -27,7 +27,8 @@ class NemesesCalculator
         "event_id" => rank.event_id,
         "#{@scope}_rank" => {
           "$lt" => rank.send("#{@scope}_rank")
-        }).pluck(:person_id)
+        }
+      ).pluck(:person_id)
     end
 
     event_nemeses.inject do |a, e|
